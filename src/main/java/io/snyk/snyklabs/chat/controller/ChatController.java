@@ -1,16 +1,12 @@
 package io.snyk.snyklabs.chat.controller;
 
-import io.snyk.snyklabs.chat.domain.Room;
-import io.snyk.snyklabs.chat.dto.ChatRoomUserListDto;
-import io.snyk.snyklabs.chat.dto.NewRoomDto;
-import io.snyk.snyklabs.chat.dto.SimpleRoomDto;
-import io.snyk.snyklabs.chat.dto.UserRoomKeyDto;
-import io.snyk.snyklabs.chat.service.RoomService;
-import io.snyk.snyklabs.message.Message;
-import io.snyk.snyklabs.message.MessageTypes;
-import io.snyk.snyklabs.user.User;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.List;
+import static java.lang.String.format;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -23,11 +19,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-
-import static java.lang.String.format;
+import io.snyk.snyklabs.chat.domain.Room;
+import io.snyk.snyklabs.chat.dto.ChatRoomUserListDto;
+import io.snyk.snyklabs.chat.dto.NewRoomDto;
+import io.snyk.snyklabs.chat.dto.SimpleRoomDto;
+import io.snyk.snyklabs.chat.dto.UserRoomKeyDto;
+import io.snyk.snyklabs.chat.service.RoomService;
+import io.snyk.snyklabs.message.Message;
+import io.snyk.snyklabs.message.MessageTypes;
+import io.snyk.snyklabs.user.User;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.List;
 
 @Controller
 public class ChatController {
@@ -95,7 +97,8 @@ public class ChatController {
     @GetMapping("/hello")
     public void hello(@RequestParam String user, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-        response.getWriter().write("<h1>Hello: " + user + "</h1>");
+        String strEscaped = StringEscapeUtils.escapeHtml4( user );
+        response.getWriter().write("<h1>Hello: " + strEscaped + "</h1>");
         response.getWriter().flush();
     }
 
